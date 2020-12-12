@@ -1,0 +1,33 @@
+swipe:
+  3:
+    left:
+      command: "xdotool key ctrl+alt+Right" # Switch to next workspace
+    right:
+      command: "xdotool key ctrl+alt+Left" # Switch to previous workspace
+    up:
+      command: "xdotool key super" # Activity
+    down:
+      command: "xdotool key super" # Activity
+  # 4 fingers seems to not be detected by my touchpad
+  # 4: 
+  #   left:
+  #     command: "xdotool key ctrl+alt+Down" # Switch to next workspace
+  #   right:
+  #     command: "xdotool key ctrl+alt+Up" # Switch to previous workspace
+  #   up:
+  #     command: "xdotool key super" # Activity
+  #   down:
+  #     command: "xdotool key ctrl+super+d" # hide all window
+pinch:
+  in:
+    command: 'xdotool key ctrl+plus' #  Zoom in
+  out:
+    command: 'xdotool key ctrl+minus' #  Zoom out
+
+threshold:
+  swipe: 0.4
+  pinch: 0.4
+
+interval:
+  swipe: 0.8
+  pinch: 0.1
