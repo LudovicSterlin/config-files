@@ -1,16 +1,16 @@
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$HOME/Library/Python/3.7/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/ludovicsterlin/.oh-my-zsh"
+export ZSH="/Users/ludovic/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="agnoster"
+ZSH_THEME="agnoster-spotify"
 
-DEFAULT_USER=ludovicsterlin
+DEFAULT_USER=ludovic
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -70,11 +70,9 @@ DEFAULT_USER=ludovicsterlin
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-
-plugins=(git vscode zsh-syntax-highlighting zsh-autosuggestions)
+plugins=(git vscode zsh-syntax-highlighting zsh-autosuggestions macos)
 
 source $ZSH/oh-my-zsh.sh
-
 
 # User configuration
 
@@ -102,21 +100,65 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# Override gcd="git checkout develop"
-alias gcd="git checkout dev && git pull"
+# Git
+# Override gcm="git checkout $(git_main_branch)"
+alias gcm="git checkout $(git_main_branch) && git pull"
+## Override gcd="git checkout $(git_develop_branch)"
+alias gcd="git checkout $(git_develop_branch) && git pull"
+## Stash
 alias gstm="git stash push -m"
 alias gstwip="git stash push -m \"wip\""
-
+# Conda
+alias cact="conda activate"
+alias cdact="conda deactivate"
 # Mongo aliases
-alias mgstart="brew services start mongodb-community@4.2"
-alias mgstop="brew services stop mongodb-community@4.2"
+alias mgstart="brew services start mongodb-community@5.0"
+alias mgstop="brew services stop mongodb-community@5.0"
 alias mgstatus="ps aux | grep -v grep | grep mongod"
-
+# Docker
+alias dcup="docker-compose up"
+alias dcupd="docker-compose up -d"
+alias doc="docker-compose"
 # Navigation aliases
-alias hdev="cd /Users/ludovicsterlin/Hinfact/dev"
-
+alias hhome="cd /Users/ludovic/HINFACT/"
 # Dev aliases
 alias tcprun="java -classpath bin/ SendOnTCP"
-
+# Fun
 alias matrix='LC_ALL=C tr -c "[:digit:]" " " < /dev/urandom | dd cbs=$COLUMNS conv=unblock | GREP_COLOR="1;33" grep --color "[^ ]"'
+# Jump
+eval "$(jump shell)"
+# The Fuck
+eval $(thefuck --alias)
+
+# Avoid chocoblast
+hf() {
+    if [[ $@ == "choco" ]]; then
+        command echo "On apprend pas au vieux singe a faire la grimace 😎"
+    else
+        command hf "$@"
+    fi
+}
+
+# 😎
+# smiling face with sunglasses
+# Unicode: U+1F60E, UTF-8: F0 9F 98 8E
+# \240\159\152\142\n
+# 0000000 9ff0 8e98                              0000004
+
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/usr/local/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
+        . "/usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh"
+    else
+        export PATH="/usr/local/Caskroom/miniconda/base/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+cdact
 
