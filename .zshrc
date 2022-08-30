@@ -113,9 +113,11 @@ alias gcd="git checkout $(git_develop_branch) && git pull"
 ## Stash
 alias gstm="git stash push -m"
 alias gstwip="git stash push -m \"wip\""
-# --------------- function to checkout rebase and checkout main -------------- #
+# -------------- function gcrbm: git checkout rebase main_branch ------------- #
+# git checkout and rebase a branch on git_main_branch
+# then checkout again git_main_branch
 gcrbm() {
-    gco $@ && grbm && gcm
+    git checkout $1 && git rebase $(git_main_branch) && git checkout $(git_main_branch)
 }
 # our handler that returns choices by populating Bash array COMPREPLY
 # (filtered by the currently entered word ($2) via compgen builtin)
@@ -125,7 +127,7 @@ _gcrbm_complete() {
 }
 # we now register our handler to provide completion hints for the "gcrbm" command
 complete -F _gcrbm_complete gcrbm;
-# # ---------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
 
 # ----------------------------------- Conda ---------------------------------- #
 alias cact="conda activate"
