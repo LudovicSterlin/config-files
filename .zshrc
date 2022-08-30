@@ -1,5 +1,5 @@
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:/usr/local/opt/python@3.9/libexec/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/ludovic/.oh-my-zsh"
@@ -70,7 +70,7 @@ DEFAULT_USER=ludovic
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git vscode zsh-syntax-highlighting zsh-autosuggestions macos)
+plugins=(git vscode zsh-syntax-highlighting zsh-autosuggestions macos zsh-shift-select)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -91,6 +91,9 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
+# ---------------------------------------------------------------------------- #
+#                                    ALIASES                                   #
+# ---------------------------------------------------------------------------- #
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -100,7 +103,9 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# Git
+# ---------------------------------------------------------------------------- #
+#                                      Git                                     #
+# ---------------------------------------------------------------------------- #
 # Override gcm="git checkout $(git_main_branch)"
 alias gcm="git checkout $(git_main_branch) && git pull"
 ## Override gcd="git checkout $(git_develop_branch)"
@@ -108,37 +113,59 @@ alias gcd="git checkout $(git_develop_branch) && git pull"
 ## Stash
 alias gstm="git stash push -m"
 alias gstwip="git stash push -m \"wip\""
-# Conda
+# --------------- function to checkout rebase and checkout main -------------- #
+gcrbm() {
+    gco $@ && grbm && gcm
+}
+# our handler that returns choices by populating Bash array COMPREPLY
+# (filtered by the currently entered word ($2) via compgen builtin)
+_gcrbm_complete() {
+    branches=$(git branch -l | cut -c3-)
+    COMPREPLY=($(compgen -W "$branches" -- "$2"))
+}
+# we now register our handler to provide completion hints for the "gcrbm" command
+complete -F _gcrbm_complete gcrbm;
+# # ---------------------------------------------------------------------------- #
+
+# ----------------------------------- Conda ---------------------------------- #
 alias cact="conda activate"
 alias cdact="conda deactivate"
-# Mongo aliases
+# ----------------------------------- Mongo ---------------------------------- #
 alias mgstart="brew services start mongodb-community@5.0"
 alias mgstop="brew services stop mongodb-community@5.0"
 alias mgstatus="ps aux | grep -v grep | grep mongod"
-# Docker
+# ---------------------------------- Docker ---------------------------------- #
 alias dcup="docker-compose up"
 alias dcupd="docker-compose up -d"
 alias doc="docker-compose"
-# Navigation aliases
+# ----------------------------------- lerna ---------------------------------- #
+alias lrun="lerna bootstrap && lerna run dev --stream"
+# --------------------------------- Prettier --------------------------------- #
+alias ptt="npx prettier --write"
+# -------------------------------- Navigation -------------------------------- #
 alias hhome="cd /Users/ludovic/HINFACT/"
-# Dev aliases
+# ----------------------------------- java ----------------------------------- #
 alias tcprun="java -classpath bin/ SendOnTCP"
-# Fun
+# ------------------------------------ Fun ----------------------------------- #
 alias matrix='LC_ALL=C tr -c "[:digit:]" " " < /dev/urandom | dd cbs=$COLUMNS conv=unblock | GREP_COLOR="1;33" grep --color "[^ ]"'
+# ---------------------------------------------------------------------------- #
+
+## Eval
 # Jump
 eval "$(jump shell)"
 # The Fuck
-eval $(thefuck --alias)
+eval $(thefuck --alias ff)
+# Prettier
 
 # Avoid chocoblast
+# And rickroll the chocobalster for fun. source: https://raw.githubusercontent.com/keroserene/rickrollrc/master/roll.sh
 hf() {
     if [[ $@ == "choco" ]]; then
-        command echo "On apprend pas au vieux singe a faire la grimace 😎"
+        command ~/roll.sh && echo "Got you 😎"
     else
         command hf "$@"
     fi
 }
-
 # 😎
 # smiling face with sunglasses
 # Unicode: U+1F60E, UTF-8: F0 9F 98 8E
