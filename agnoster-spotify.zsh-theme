@@ -202,13 +202,25 @@ prompt_hg() {
   fi
 }
 
+# from https://github.com/shashankmehta/dotfiles/blob/master/thesetup/zsh/.oh-my-zsh/custom/themes/gitster.zsh-theme
+get_pwd(){
+  git_root=$PWD
+  while [[ $git_root != / && ! -e $git_root/.git ]]; do
+    git_root=$git_root:h
+  done
+  if [[ $git_root = / ]]; then
+    unset git_root
+    prompt_short_dir=%~
+  else
+    parent=${git_root%\/*}
+    prompt_short_dir=${PWD#$parent/}
+  fi
+  echo $prompt_short_dir
+}
+
 # Dir: current working directory
 prompt_dir() {
-  if git rev-parse --is-inside-work-tree> /dev/null 2>&1; then
-    prompt_segment blue $CURRENT_FG '%c'
-  else
-    prompt_segment blue $CURRENT_FG '%~'
-  fi
+  prompt_segment blue $CURRENT_FG $(get_pwd)
 }
 
 # Virtualenv: current working virtualenv
@@ -218,25 +230,19 @@ prompt_virtualenv() {
   fi
 }
 
-# Spotify: Playing info only when playing
-# Exemple of output from `spotify status` below
-# Spotify is currently playing.
-# Artist: Soichi Terada
-# Album: Sounds from the Far East
-# Track: CPM 
-# Position: 4:10 / 4:48
+# Spotify: display ▶️ track | artist | m:ss / m:ss 
+# pretty cool but way to slow for dev unfortunately
 prompt_spotify() {
   MSG=$(spotify status);
   lines=("${(@f)MSG}")  
-  # PLAYING_STATUS=${MSG:30:7};
   PLAYING_STATUS=${lines[1]:30:7};
-  TRACK=${lines[4]:7};
-  # TRACK=`echo $TRACK | sed 's/ *$//g'`
-  TRACK="$(echo -e $TRACK | tr -d '[:space:]')"
-  ARTIST=${lines[2]:14};
-  TIME=`echo ${lines[5]:10} | sed 's/ *$//g'`
   if [[ $PLAYING_STATUS == "playing" ]]; then
-    prompt_segment default green "▶️ $TRACK | $ARTIST | $TIME"
+    TRACK=${lines[4]:7};
+    TRACK="$(echo -e $TRACK | tr -d '[:space:]')"
+    ARTIST=${lines[2]:14};
+    TIME=`echo ${lines[5]:10} | sed 's/ *$//g'`
+    SPOTIFY=`echo "▶️ $TRACK | $ARTIST | $TIME"`
+    prompt_segment default green "${SPOTIFY}"
   fi
 }
 
@@ -283,7 +289,7 @@ build_prompt() {
   RETVAL=$?
   prompt_status
   prompt_virtualenv
-  # prompt_spotify
+  # prompt_spotify #pretty cool but way to slow for dev unfortunately
   prompt_aws
   prompt_context
   prompt_dir
