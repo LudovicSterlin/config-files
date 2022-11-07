@@ -119,6 +119,9 @@ alias gstwip="git stash push -m \"wip\""
 gcrbm() {
     git checkout $1 && git rebase $(git_main_branch) && git checkout $(git_main_branch)
 }
+gcrbmf() {
+    git checkout $1 && git rebase $(git_main_branch) && git push --force-with-lease && git checkout $(git_main_branch)
+}
 # our handler that returns choices by populating Bash array COMPREPLY
 # (filtered by the currently entered word ($2) via compgen builtin)
 _gcrbm_complete() {
@@ -127,6 +130,7 @@ _gcrbm_complete() {
 }
 # we now register our handler to provide completion hints for the "gcrbm" command
 complete -F _gcrbm_complete gcrbm;
+complete -F _gcrbm_complete gcrbmf;
 # ---------------------------------------------------------------------------- #
 
 # ----------------------------------- Conda ---------------------------------- #
@@ -146,18 +150,20 @@ alias lrun="lerna bootstrap && lerna run dev --stream"
 alias ptt="npx prettier --write"
 # -------------------------------- Navigation -------------------------------- #
 alias hhome="cd /Users/ludovic/HINFACT/"
+alias proddev="\"/Users/ludovic/Library/CloudStorage/OneDrive-SharedLibraries-HINFACT/Hinfact - Interne - Knowledge Management/Product Development\""
 # ----------------------------------- java ----------------------------------- #
 alias tcprun="java -classpath bin/ SendOnTCP"
 # ------------------------------------ Fun ----------------------------------- #
 alias matrix='LC_ALL=C tr -c "[:digit:]" " " < /dev/urandom | dd cbs=$COLUMNS conv=unblock | GREP_COLOR="1;33" grep --color "[^ ]"'
 # ---------------------------------------------------------------------------- #
 
-## Eval
+# ---------------------------------------------------------------------------- #
+#                                     Eval                                     #
+# ---------------------------------------------------------------------------- #
 # Jump
 eval "$(jump shell)"
 # The Fuck
 eval $(thefuck --alias ff)
-# Prettier
 
 # Avoid chocoblast
 # And rickroll the chocobalster for fun. source: https://raw.githubusercontent.com/keroserene/rickrollrc/master/roll.sh
@@ -169,11 +175,13 @@ hf() {
     fi
 }
 # 😎
-# smiling face with sunglasses
-# Unicode: U+1F60E, UTF-8: F0 9F 98 8E
-# \240\159\152\142\n
-# 0000000 9ff0 8e98                              0000004
+# ---------------------------------------------------------------------------- #
 
+
+# ---------------------------------------------------------------------------- #
+#                          DON'T EDIT BELOW THIS LINE                          #
+# ---------------------------------------------------------------------------- #
+# ------------- Automatically added lines, by installed programs ------------- #
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -191,3 +199,13 @@ unset __conda_setup
 # <<< conda initialize <<<
 cdact
 
+# brew use node@16 as default
+export PATH="/usr/local/opt/node@16/bin:$PATH"
+
+# pnpm
+export PNPM_HOME="/Users/ludovic/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+# pnpm end
+# tabtab source for packages
+# uninstall by removing these lines
+[[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
